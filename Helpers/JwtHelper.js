@@ -6,7 +6,7 @@ const User = require('../Models/User')
 module.exports = {
     signAccessToken: (userId) =>{
         return new Promise((resolve,reject)=>{
-            const payload = {}
+            const payload = { userId }
             const secret = process.env.ACCESS_TOKEN_SECRET
             const options = {
                 expiresIn :'1yr',
@@ -35,14 +35,22 @@ module.exports = {
             err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message
           return next(createError.Unauthorized(message))
         }
-        req.payload = payload
-        next()
+
+        User.findById(payload.userId)
+            .then(user => {
+                req.user = user;
+                req.payload = payload
+                next();
+            })
+            .catch(err => {
+                return next(createError.InternalServerError());
+        });
       })
     },
 
     signRefreshToken: (userId) =>{
         return new Promise((resolve,reject)=>{
-            const payload = {}
+            const payload = { userId }
             const secret = process.env.REFRESH_TOKEN_SECRET
             const options = {
                 expiresIn :'1yr',

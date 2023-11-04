@@ -8,12 +8,14 @@ const { verifyAccessToken } = require('./Helpers/JwtHelper')
 const bcrypt = require('bcrypt')
 const cors = require('cors');
 const User = require("./Routes/UserRoute");
+const Flight = require("./Routes/FlightRoute");
+const Booking = require("./Routes/BookingRoute");
 
 const app = express()
 
 mongoose.set("strictQuery", false);
 
-mongoose.connect('mongodb+srv://ibrahimabdulruhman:abc123456@cluster0.zfq3ijw.mongodb.net/')
+mongoose.connect('mongodb+srv://ibrahim1234:abc123456@webdev.wcjlokc.mongodb.net/')
 
 
 mongoose.connection.on('error',err => {
@@ -34,11 +36,13 @@ app.use(cors({
 
 
 app.use('/User', User);
+app.use('/Flight', Flight);
+app.use('/Booking', Booking);
 
 
 // In your backend server response handler
 app.use((req,res) => {
-res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
 res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 res.setHeader('Access-Control-Allow-Credentials', 'true');
